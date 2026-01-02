@@ -55,6 +55,7 @@ def plot_data(x, y, mu):
     plt.show()
 
 
+
 def main(): 
     np.random.seed(42)
 
@@ -70,6 +71,10 @@ def main():
     x = simulate_markov_chain(transition_matrix, pi_0, T)
     y_obs = generate_observations(x, mu, sigma)
     plot_data(x[:1000], y_obs[:1000], mu)
+
+x = simulate_markov_chain(transition_matrix, pi_0, T)
+y_obs = generate_observations(x, mu, sigma)
+
 
 if __name__ == "__main__":
     main()
