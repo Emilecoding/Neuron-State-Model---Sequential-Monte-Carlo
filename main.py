@@ -6,6 +6,7 @@ from smoothing import (
     plot_smoothing_results,
 )
 from em_algorithm import em_algorithm_hh, plot_em_convergence
+from variance_study import run_em_multiple, plot_multi_convergence
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -20,7 +21,7 @@ dt = 0.01
 I = 10
 sigma_dyn = 0.1
 sigma_obs = 1
-Ds = 5
+Ds = 4
 traj_init = [-65.0, 0.05, 0.6, 0.32]
 
 traj = simulate_hh(
@@ -66,7 +67,7 @@ smoothed_particles, smoothed_weights = backward_smoothing_logdomain(
 expectations = smooth_expectation(smoothed_particles, smoothed_weights)
 V_smooth = expectations[:, 0]
 
-# plot_smoothing_results(V_true, V_filt, V_smooth, V_obs, dt)
+plot_smoothing_results(V_true, V_filt, V_smooth, V_obs, dt)
 
 print("---------------Smoothing is finished---------------")
 
@@ -78,7 +79,7 @@ print("---------------Smoothing is finished---------------")
 
 
 initial_params = {
-    "sigma_obs": 2,
+    "sigma_obs": 1.5,
     "sigma_dyn": 0.3,
     "I": 10.0,
     "gNa": 100.0,  # Intentionnellement différent des vraies valeurs
@@ -104,8 +105,16 @@ params_final, history = em_algorithm_hh(
     y_obs=V_obs[:1000],
     dt=dt,
     n_iter=n_iter,
-    N_particles=100,
+    N_particles=200,
     initial_params=initial_params,
 )
 
 plot_em_convergence(history=history, true_params=true_params)
+
+
+# n_iter = 3
+# n_runs = 3
+
+# runs, series, rmse_smooth = run_em_multiple(V_obs, dt, n_runs, n_iter, N_particles)
+
+# plot_multi_convergence(series, rmse_smooth=rmse_smooth, true_params=true_params)

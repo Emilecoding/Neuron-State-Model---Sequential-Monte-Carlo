@@ -6,8 +6,6 @@ import json
 from generate_data import simulate_hh, generate_observations
 from particle_filter import particle_filter
 from smoothing import (
-    backward_smoothing_corrected,
-    smooth_expectation,
     backward_smoothing_logdomain,
 )
 from maximisation import compute_sigma_obs, compute_sigma_dyn, estimate_hh_parameters
@@ -20,6 +18,7 @@ def em_algorithm_hh(
     N_particles=200,
     initial_params=None,
     true_values=[120.0, 36.0, 0.3, 50.0, -77.0, -54.4],
+    seed=None,
 ):
     """
     Algorithme EM complet pour le modèle HH
@@ -37,6 +36,9 @@ def em_algorithm_hh(
     initial_params : dict
         Paramètres initiaux
     """
+
+    if seed is not None:
+        np.random.seed(seed)
 
     T = len(y_obs)
 

@@ -70,7 +70,7 @@ def plot_smoothing_results(V_true, V_filt, V_smooth, y_obs, dt, save_dir="figure
 
     t = np.arange(len(V_true)) * dt
 
-    fig, axes = plt.subplots(3, 1, figsize=(12, 10))
+    fig, axes = plt.subplots(2, 1, figsize=(12, 10))
 
     # 1. Comparaison complet
     axes[0].plot(t, V_true, "k-", label="Vrai voltage", alpha=0.7, linewidth=1)
@@ -82,45 +82,45 @@ def plot_smoothing_results(V_true, V_filt, V_smooth, y_obs, dt, save_dir="figure
     axes[0].grid(True, alpha=0.3)
 
     # 2. Zoom sur une région
-    zoom_start = 1000
-    zoom_end = 1500
-    mask_zoom = (t >= zoom_start) & (t <= zoom_end)
+    # zoom_start = 1000
+    # zoom_end = 1500
+    # mask_zoom = (t >= zoom_start) & (t <= zoom_end)
 
-    axes[1].plot(t[mask_zoom], V_true[mask_zoom], "k-", label="Vrai", alpha=0.7)
-    axes[1].plot(t[mask_zoom], V_filt[mask_zoom], "b-", label="Filtré", alpha=0.5)
-    axes[1].plot(t[mask_zoom], V_smooth[mask_zoom], "r-", label="Lissé", alpha=0.8)
-    axes[1].scatter(
-        t[~np.isnan(y_obs) & mask_zoom],
-        y_obs[~np.isnan(y_obs) & mask_zoom],
-        s=10,
-        c="green",
-        alpha=0.5,
-        label="Observations",
-    )
-    axes[1].set_ylabel("Voltage (mV)")
-    axes[1].set_title(f"Zoom: {zoom_start}-{zoom_end} ms")
-    axes[1].legend(loc="upper right")
-    axes[1].grid(True, alpha=0.3)
+    # axes[1].plot(t[mask_zoom], V_true[mask_zoom], "k-", label="Vrai", alpha=0.7)
+    # axes[1].plot(t[mask_zoom], V_filt[mask_zoom], "b-", label="Filtré", alpha=0.5)
+    # axes[1].plot(t[mask_zoom], V_smooth[mask_zoom], "r-", label="Lissé", alpha=0.8)
+    # axes[1].scatter(
+    #     t[~np.isnan(y_obs) & mask_zoom],
+    #     y_obs[~np.isnan(y_obs) & mask_zoom],
+    #     s=10,
+    #     c="green",
+    #     alpha=0.5,
+    #     label="Observations",
+    # )
+    # axes[1].set_ylabel("Voltage (mV)")
+    # axes[1].set_title(f"Zoom: {zoom_start}-{zoom_end} ms")
+    # axes[1].legend(loc="upper right")
+    # axes[1].grid(True, alpha=0.3)
 
     # 3. Erreurs
     mask_obs = ~np.isnan(y_obs)
     error_filt = np.abs(V_filt[mask_obs] - V_true[mask_obs])
     error_smooth = np.abs(V_smooth[mask_obs] - V_true[mask_obs])
 
-    axes[2].plot(
+    axes[1].plot(
         t[mask_obs][:300], error_filt[:300], "b-", alpha=0.5, label="Erreur filtré"
     )
-    axes[2].plot(
+    axes[1].plot(
         t[mask_obs][:300], error_smooth[:300], "r-", alpha=0.8, label="Erreur lissé"
     )
-    axes[2].set_xlabel("Temps (ms)")
-    axes[2].set_ylabel("Erreur absolue (mV)")
-    axes[2].set_title(
+    axes[1].set_xlabel("Temps (ms)")
+    axes[1].set_ylabel("Erreur absolue (mV)")
+    axes[1].set_title(
         f"Erreurs (RMSE filtré: {np.mean(error_filt):.2f} mV, "
         f"lissé: {np.mean(error_smooth):.2f} mV)"
     )
-    axes[2].legend()
-    axes[2].grid(True, alpha=0.3)
+    axes[1].legend()
+    axes[1].grid(True, alpha=0.3)
 
     plt.tight_layout()
     plt.savefig(f"{save_dir}/smoothing_results.png", dpi=150, bbox_inches="tight")
